@@ -48,6 +48,13 @@ class Video(models.Model):
     views = models.IntegerField(default=0)
     link = models.URLField(max_length=500)
 
+class Notification(models.Model):
+    id = models.AutoField(primary_key=True)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+    time = models.DateTimeField(auto_now_add=True)
+
+
 
 
 
