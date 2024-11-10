@@ -6,7 +6,7 @@ from apis.serializer import Signup
 
 # Create your views here.
 
-class SignupViewSet(viewsets.Viewset):
+class SignupViewSet(viewsets.ViewSet):
 
     @action(detail=False, method=['Post'])
     def signup(self,request):

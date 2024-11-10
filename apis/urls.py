@@ -3,5 +3,5 @@ from apis import views
 
 
 urlpatterns =[
-    path('signup/', views.SignupViewSet({'post':'signup'}, name='signup'))
+    path('signup/', views.SignupViewSet.as_view({'post':'signup'}), name='signup')
 ]
