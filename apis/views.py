@@ -14,7 +14,8 @@ class SignupViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             user = serializer.save()
             response_data=({'id': user.id,
-                            **serializer.data})
+                            'email':user.email
+                            })
             return Response(response_data,
                             status=status.HTTP_201_CREATED)
         else:

@@ -5,7 +5,7 @@ class Signup(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name','last_name','email']
+        fields = ['profile_image','first_name','last_name','email','password']
     
     def validate(self,data):
         email = data.get('email')
@@ -20,9 +20,13 @@ class Signup(serializers.ModelSerializer):
         if not any (char.isupper() for char in password):
             raise serializers.ValidationError({'password':'password should have at least one upper case'})
         
+        return data
+        
 
     def create(self, validated_data):
+        password = validated_data.pop('password')
         user = User.objects.create(**validated_data)
+        user.set_password(password)
         user.save()
         return user
         
