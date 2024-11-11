@@ -23,4 +23,7 @@ class SignupViewSet(viewsets.ViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
         
 
-    
+class LoginViewSet(viewsets.ViewSet):
+
+    @action(detail=False, method=['Post'])
+    def login(self,request):
