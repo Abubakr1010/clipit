@@ -27,3 +27,8 @@ class LoginViewSet(viewsets.ViewSet):
 
     @action(detail=False, method=['Post'])
     def login(self,request):
+
+        email =
+        password =
+
+        
