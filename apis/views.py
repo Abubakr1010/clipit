@@ -3,6 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from apis.serializer import Signup
+from apis.models import User, Video, Notification
 
 # Create your views here.
 
@@ -28,7 +29,26 @@ class LoginViewSet(viewsets.ViewSet):
     @action(detail=False, method=['Post'])
     def login(self,request):
 
-        email =
-        password =
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        if not email or not password:
+            return Response({"error":"fill all fields"},status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"error":"User not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        
+        if not user.check_password(password):
+            return Response({"error":"Invalid Password"})
+        
+        else:
+            return Response({"success":f"{user} logged in successfully"}, status=status.HTTP_200_OK)
+
+
+
+
 
         
