@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from apis.serializer import Signup
 from apis.models import User, Video, Notification
 
@@ -44,10 +45,12 @@ class LoginViewSet(viewsets.ViewSet):
         if not user.check_password(password):
             return Response({"error":"Invalid Password"})
         
-        else:
-            return Response({"success":f"{user} logged in successfully"}, status=status.HTTP_200_OK)
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
 
-
+        return Response({"refresh": str(refresh),
+                         "acess": access_token,
+                         "success":f"{user} logged in successfully"}, status=status.HTTP_200_OK)
 
 
 
