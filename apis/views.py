@@ -53,5 +53,16 @@ class LoginViewSet(viewsets.ViewSet):
                          "success":f"{user} logged in successfully"}, status=status.HTTP_200_OK)
 
 
+class VideoViewSet(viewsets.ViewSet):
+    action(detail=False, method=['Post'])
+    def video(self, request, pk=None):
+        user = User.object.get(pk=pk)
+        serializer = VideoViewSet()
 
-        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'user':user.first_namea,
+                             'data':serializer.data})
+        else:
+            return Response({'error':'Your video was not saves'},
+                            status=status.HTTP_400_BAD_REQUEST)
