@@ -66,3 +66,5 @@ class VideoViewSet(viewsets.ViewSet):
         else:
             return Response({'error':'Your video was not saves'},
                             status=status.HTTP_400_BAD_REQUEST)
+        
+    if user.request == 'Get':
