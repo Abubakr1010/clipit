@@ -3,7 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from apis.serializer import Signup
+from apis.serializer import Signup, VideoSerializer
 from apis.models import User, Video, Notification
 
 # Create your views here.
@@ -56,10 +56,11 @@ class LoginViewSet(viewsets.ViewSet):
 class VideoViewSet(viewsets.ViewSet):
     action(detail=False, method=['Post','Get'])
     def video(self, request, pk=None):
-        user = User.object.get(pk=pk)
+        user = User.objects.get(pk=pk)
+        video = Video.objects.get(pk=pk)
         
         if request.method == 'Post':
-            serializer = VideoViewSet()
+            serializer = VideoSerializer()
             if serializer.is_valid():
                 serializer.save()
                 return Response({'user':user.first_namea,
@@ -69,4 +70,8 @@ class VideoViewSet(viewsets.ViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
         
         if user.request == 'Get':
-            
+            serializer = VideoSerializer(video)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'video':serializer.data},
+                                 status=status.HTTP_200_OK)

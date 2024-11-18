@@ -29,6 +29,13 @@ class Signup(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+    
+
+class VideoSerializer(serializers.Serializer):
+
+    class Meta:
+        Model = Video
+        fields = ['id','name','user','created_at','views','link']
         
 
 
