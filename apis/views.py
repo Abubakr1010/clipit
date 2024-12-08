@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from apis.serializer import Signup, VideoSerializer
 from apis.models import User, Video, Notification
+from django.db import connection
 
 # Create your views here.
 
@@ -54,24 +55,36 @@ class LoginViewSet(viewsets.ViewSet):
 
 
 class VideoViewSet(viewsets.ViewSet):
-    action(detail=False, method=['Post','Get'])
+    action(detail=False, method=['Post'])
     def video(self, request, pk=None):
-        user = User.objects.get(pk=pk)
-        video = Video.objects.get(pk=pk)
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({'error':'Not Found'}, status=status.HTTP_404_NOT_FOUND)
         
-        if request.method == 'Post':
-            serializer = VideoSerializer()
-            if serializer.is_valid():
-                serializer.save()
-                return Response({'user':user.first_namea,
-                             'data':serializer.data})
-        else:
-            return Response({'error':'Your video was not saves'},
-                            status=status.HTTP_400_BAD_REQUEST)
+        video_data = request.data
+
+        if not video_data.get('name') or not video_data.get('link'):
+            return Response({"error":"Name and link required"}, status=status.HTTP_400_BAD_REQUEST)
         
-        if user.request == 'Get':
-            serializer = VideoSerializer(video)
-            if serializer.is_valid():
-                serializer.save()
-                return Response({'video':serializer.data},
-                                 status=status.HTTP_200_OK)
+        try:
+            with connection.cursor() as cursor:
+                query = """INSERT INTO apis_video(user_id,name,created_at,views,link)
+                VALUES (%s, %s, NOW(), %s, %s)"""
+
+                cursor.execute(query,[
+                    user.id,
+                    video_data['name'],
+                    video_data.get('views',0),
+                    video_data['link']
+                    
+                ])
+
+            return Response ({
+                'user': user.first_name,
+                'message':'Video Saved Successfully!'
+            })
+        
+        except Exception as e:
+            return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
