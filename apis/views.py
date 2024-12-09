@@ -90,14 +90,14 @@ class VideoViewSet(viewsets.ViewSet):
 
 
     @action(detail=False, method=['Post'])
-    def get_video(self, request, pk=None):
+    def get_video(self, request, pk=None, video_pk=None):
 
         try:
             with connection.cursor() as cursor:
                 user_query = """SELECT id, first_name 
                              FROM apis_user
                              WHERE id = %s"""
-                cursor.ececute(user_query,[pk])
+                cursor.execute(user_query,[pk])
                 user = cursor.fetchone()
 
                 if not user:
@@ -106,11 +106,11 @@ class VideoViewSet(viewsets.ViewSet):
                 
                 user_id, first_name = user
                 
-            with connection.curser() as cursor:
-                video_query = """SELECT name, view, link, created_at
+            with connection.cursor() as cursor:
+                video_query = """SELECT name, views, link, created_at
                                 FROM apis_video
                                 WHERE user_id = %s AND id = %s"""
-                cursor.execute(video_query,[user_id, id])
+                cursor.execute(video_query,[pk, video_pk])
                 video = cursor.fetchone()
 
             if not video:
