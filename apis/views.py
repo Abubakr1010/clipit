@@ -56,7 +56,7 @@ class LoginViewSet(viewsets.ViewSet):
 
 class VideoViewSet(viewsets.ViewSet):
     action(detail=False, method=['Post'])
-    def video(self, request, pk=None):
+    def save(self, request, pk=None):
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
@@ -87,4 +87,53 @@ class VideoViewSet(viewsets.ViewSet):
         
         except Exception as e:
             return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    @action(detail=False, method=['Post'])
+    def get_video(self, request, pk=None):
+
+        try:
+            with connection.cursor() as cursor:
+                user_query = """SELECT id, first_name 
+                             FROM apis_user
+                             WHERE id = %s"""
+                cursor.ececute(user_query,[pk])
+                user = cursor.fetchone()
+
+                if not user:
+                    return Response({"status":"User Not Found"},
+                                     status=status.HTTP_404_NOT_FOUND)
+                
+                user_id, first_name = user
+                
+            with connection.curser() as cursor:
+                video_query = """SELECT name, view, link, created_at
+                                FROM apis_video
+                                WHERE user_id = %s AND id = %s"""
+                cursor.execute(video_query,[user_id, id])
+                video = cursor.fetchone()
+
+            if not video:
+                return Response({"status":"Video Not Found"},
+                                status=status.HTTP_404_NOT_FOUND)
+            
+
+            video_data = {
+                'name': video[0],
+                'views': video[1],
+                'link': video[2],
+                'created_at': video[3]
+            }
+
+            return Response({"user":first_name, "video":video}, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response ({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+                
+
+
+
+
             
