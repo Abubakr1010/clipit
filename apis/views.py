@@ -178,12 +178,13 @@ class VideoViewSet(viewsets.ViewSet):
             return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     
-    @action(detail=True, method='Update')
+    @action(detail=True, method='Put')
     def update(self,request, pk=None, video_pk=None):
         try:
+            new_name = request.data.get('name')
             with connection.cursor() as cursor:
                 user_query = """SELECT id 
-                             FROM user_apis
+                             FROM apis_user
                              WHERE id = %s"""
                 cursor.execute(user_query,[pk])
                 user = cursor.fetchone()
@@ -192,7 +193,6 @@ class VideoViewSet(viewsets.ViewSet):
                     return Response({"error":"User Not Found"},
                                     status=status.HTTP_404_NOT_FOUND)
 
-                user_id,first_name = user
 
             with connection.cursor() as cursor:
                 video_query = """SELECT id
@@ -206,22 +206,23 @@ class VideoViewSet(viewsets.ViewSet):
                     return Response({"error":"Video Not Found"},
                                     status=status.HTTP_404_NOT_FOUND)
 
-                video_name=video[0]
 
             with connection.cursor() as cursor:
                 update_query = """UPDATE apis_video
                                SET name = %s
                                WHERE id = %s"""
                 
-                cursor.execute(update_query,[video_pk, pk])
+                cursor.execute(update_query,[new_name, video_pk])
                 
                 return Response({"status":"Video name updated",
-                                "video":{"new_name":video_name[0]}
+                                "video":{"id":video_pk, "new_name": new_name}
                                 })
             
         except Exception as e:
             return Response({"error":str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        
             
             
             
