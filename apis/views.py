@@ -56,7 +56,7 @@ class LoginViewSet(viewsets.ViewSet):
 
 class VideoViewSet(viewsets.ViewSet):
     action(detail=False, method=['Post'])
-    def save(self, request, pk=None):
+    def create(self, request, pk=None):
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
@@ -129,6 +129,121 @@ class VideoViewSet(viewsets.ViewSet):
         
         except Exception as e:
             return Response ({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+    @action(detail=False, method= 'Delete')
+    def delete_video(self,request, pk=None, video_pk=None):
+            
+        try:
+            with connection.cursor() as cursor:
+                user_query = """SELECT id, first_name
+                                FROM apis_user 
+                                WHERE id = %s"""
+                
+                cursor.execute(user_query,[pk])
+                user = cursor.fetchone()
+
+                if not user:
+                    return Response({"error":"User Not Found"},
+                                    status=status.http)
+                
+            
+                user_id,first_name = user      
+
+            with connection.cursor() as cursor:
+                video_query = """SELECT name
+                                FROM apis_video
+                                WHERE id =%s and user_id=%s"""
+                    
+                cursor.execute(video_query,[video_pk,pk])
+                video = cursor.fetchone()
+
+                if not video:
+                    return Response({"error":"Video Not Found"}, 
+                                status=status.HTTP_404_NOT_FOUND)
+                
+                video_name = video[0]
+            
+            with connection.cursor() as cursor:
+                delete_query = """DELETE FROM apis_video
+                               WHERE id=%s AND user_id=%s"""
+                cursor.execute(delete_query, [video_pk,pk])
+            
+            return Response({"status":"Deleted successfully",
+                             "video":{"name":video[0]}},
+                            status=status.HTTP_200_OK)
+            
+
+        except Exception as e:
+            return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    
+    @action(detail=True, method='Update')
+    def update(self,request, pk=None, video_pk=None):
+        try:
+            with connection.cursor() as cursor:
+                user_query = """SELECT id 
+                             FROM user_apis
+                             WHERE id = %s"""
+                cursor.execute(user_query,[pk])
+                user = cursor.fetchone()
+
+                if not user:
+                    return Response({"error":"User Not Found"},
+                                    status=status.HTTP_404_NOT_FOUND)
+
+                user_id,first_name = user
+
+            with connection.cursor() as cursor:
+                video_query = """SELECT id
+                                FROM apis_video
+                                WHERE id = %s AND user_id = %s"""
+
+                cursor.execute(video_query,[video_pk,pk])
+                video = cursor.fetchone()
+
+                if not video:
+                    return Response({"error":"Video Not Found"},
+                                    status=status.HTTP_404_NOT_FOUND)
+
+                video_name=video[0]
+
+            with connection.cursor() as cursor:
+                update_query = """UPDATE apis_video
+                               SET name = %s
+                               WHERE id = %s"""
+                
+                cursor.execute(update_query,[video_pk, pk])
+                
+                return Response({"status":"Video name updated",
+                                "video":{"new_name":video_name[0]}
+                                })
+            
+        except Exception as e:
+            return Response({"error":str(e)},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            
+            
+
+
+
+
+            
+                    
+            
+                             
+
+        
+        
+
+        
+        
+
+        
+
+
+
 
 
                 
