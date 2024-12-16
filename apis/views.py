@@ -222,6 +222,8 @@ class VideoViewSet(viewsets.ViewSet):
             return Response({"error":str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+
+class SettingsViewSet(viewsets.ViewSet):
         
             
             
