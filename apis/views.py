@@ -224,6 +224,7 @@ class VideoViewSet(viewsets.ViewSet):
         
 
 class SettingsViewSet(viewsets.ViewSet):
+    def profile():
         
             
             
