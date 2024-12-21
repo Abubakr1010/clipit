@@ -234,7 +234,7 @@ class SettingsViewSet(viewsets.ViewSet):
 
             with connection.cursor() as cursor:
                 if first_name is not None:
-                    cursor.execute = (
+                    cursor.execute(
                                     """UPDATE apis_user
                                     SET first_name = %s
                                     WHERE id = %s""",
@@ -244,18 +244,19 @@ class SettingsViewSet(viewsets.ViewSet):
                                     
 
                 if last_name is not None:
-                    cursor.execute = ("""UPDATE apis_user
-                                                SET last_name = %s
-                                                WHERE id = %s""",
-                                                [last_name,pk]
+                    cursor.execute(
+                                    """UPDATE apis_user
+                                    SET last_name = %s
+                                    WHERE id = %s""",
+                                    [last_name,pk]
                     )
 
                 if profile_image is not None:
-                    cursor.execute= (
-                                            """UPDATE apis_user
-                                            SET profile_image = %s
-                                            WHERE id = %s""",
-                                            [profile_image,pk]
+                    cursor.execute(
+                                     """UPDATE apis_user
+                                     SET profile_image = %s
+                                     WHERE id = %s""",
+                                     [profile_image,pk]
                     )
 
                 return Response({"status":"updated successfully"}, status=status.HTTP_200_OK)
