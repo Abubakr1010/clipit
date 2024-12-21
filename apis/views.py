@@ -228,36 +228,42 @@ class SettingsViewSet(viewsets.ViewSet):
     def profile(self,request,pk=None):
 
         try:
-            first_name = request.data('first_name')
-            last_name = request.data('last_name')
-            profile_image = request.data('profile_image')
+            first_name = request.data.get('first_name')
+            last_name = request.data.get('last_name')
+            profile_image = request.data.get('profile_image')
 
             with connection.cursor() as cursor:
                 if first_name is not None:
-                    update_first_name_query = """UPDATE apis_user
+                    cursor.execute = (
+                                    """UPDATE apis_user
                                     SET first_name = %s
-                                    WHERE id = %s"""
+                                    WHERE id = %s""",
+                                    [first_name,pk]
+                    )
                 
-                cursor.execute(update_first_name_query ,[first_name,pk])
+                                    
 
                 if last_name is not None:
-                    update_last_name_query = """UPDATE apis_user
+                    cursor.execute = ("""UPDATE apis_user
                                                 SET last_name = %s
-                                                WHERE id = %s"""
-                    
-                    cursor.execute(update_first_name_query,[last_name,pk])
+                                                WHERE id = %s""",
+                                                [last_name,pk]
+                    )
 
                 if profile_image is not None:
-                    update_profile_image = """UPDATE apis_user
+                    cursor.execute= (
+                                            """UPDATE apis_user
                                             SET profile_image = %s
-                                            WHERE id = %s"""
-                    cursor.execute(update_profile_image,[profile_image,pk])
+                                            WHERE id = %s""",
+                                            [profile_image,pk]
+                    )
 
-                return Response({"status","updated successfully"}, status=status.HTTP_200_OK)
+                return Response({"status":"updated successfully"}, status=status.HTTP_200_OK)
             
         except Exception as e:
             return Response({'error':str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
 
 
