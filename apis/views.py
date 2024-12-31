@@ -266,7 +266,9 @@ class SettingsViewSet(viewsets.ViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class Notification(viewsets.ViewSet):
+class NotificationViewSet(viewsets.ViewSet):
+    def notification(self,request, pk=None):
+        
 
 
 
