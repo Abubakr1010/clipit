@@ -267,6 +267,7 @@ class SettingsViewSet(viewsets.ViewSet):
 
 
 class NotificationViewSet(viewsets.ViewSet):
+    @action(detail=True, method='get')
     def notification(self,request, pk=None):
         
 
