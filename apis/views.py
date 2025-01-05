@@ -272,6 +272,7 @@ class NotificationViewSet(viewsets.ViewSet):
 
         try:
             with connection as cursor:
+                if first name as None:
         
 
 
