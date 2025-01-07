@@ -222,6 +222,8 @@ class VideoViewSet(viewsets.ViewSet):
             return Response({"error":str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+    def all_videos():
+        
 
 class SettingsViewSet(viewsets.ViewSet):
     @action(detail=False, method='Put')
@@ -266,13 +268,13 @@ class SettingsViewSet(viewsets.ViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class NotificationViewSet(viewsets.ViewSet):
-    @action(detail=True, method='get')
-    def notification(self,request, pk=None):
+# class NotificationViewSet(viewsets.ViewSet):
+#     @action(detail=True, method='get')
+#     def notification(self,request, pk=None):
 
-        try:
-            with connection as cursor:
-                if first name as None:
+#         try:
+#             with connection as cursor:
+#                 if first name as None:
         
 
 
