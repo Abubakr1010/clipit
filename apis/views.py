@@ -89,7 +89,7 @@ class VideoViewSet(viewsets.ViewSet):
             return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-    @action(detail=False, method=['Post'])
+    @action(detail=False, method=['Get'])
     def get_video(self, request, pk=None, video_pk=None):
 
         try:
@@ -221,8 +221,21 @@ class VideoViewSet(viewsets.ViewSet):
         except Exception as e:
             return Response({"error":str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=False, method='Get')   
+    def all_videos(self, pk=None):
+
+        try:
+            with connection.cursor() as cursor:
+                user_query="""Select User
+                           Where id=%s"""
+            
+            
+            
+
+                
+
         
-    def all_videos():
         
 
 class SettingsViewSet(viewsets.ViewSet):
