@@ -227,16 +227,16 @@ class VideoViewSet(viewsets.ViewSet):
 
         try:
             with connection.cursor() as cursor:
-                user_query="""Select User
-                           Where id=%s"""
-            
-            
-            
+                user_query = ("""Select 
+                            first_name,User
+                            Where id=%s""",
+                           [first_name,pk]
+                )
+                cursor.fetchone(user_query)
 
+    
                 
-
-        
-        
+            
 
 class SettingsViewSet(viewsets.ViewSet):
     @action(detail=False, method='Put')
