@@ -234,6 +234,8 @@ class VideoViewSet(viewsets.ViewSet):
                 )
                 cursor.fetchone(user_query)
 
+            with connection.cursor()
+
     
                 
             
