@@ -227,18 +227,34 @@ class VideoViewSet(viewsets.ViewSet):
 
         try:
             with connection.cursor() as cursor:
-                user_query = ("""Select 
-                            first_name,User
-                            Where id=%s""",
-                           [first_name,pk]
-                )
-                cursor.fetchone(user_query)
+                user_query = """SELECT first_name,id
+                            FROM apis_user
+                            WHERE id = %s"""
+                           
+                cursor.execute(user_query,[pk])
+                user = cursor.fetchone()
+
+                if not user:
+                    return Response({"error":f"user {user} not found"},
+                                    status=status.HTTP_404_NOT_FOUND)
 
             with connection.cursor() as cursor:
-
-    
+                all_videos_query = """SELECT *
+                             FROM apis_video
+                             WHERE id = %s"""
                 
-            
+                cursor.execute(all_videos_query,[pk])
+                videos = cursor.fetchone()
+
+                if not videos:
+                    return Response({"error":f"{videos} not found"},
+                                    status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as e:
+            return Response({'error':str(e)},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 class SettingsViewSet(viewsets.ViewSet):
     @action(detail=False, method='Put')
