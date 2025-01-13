@@ -222,8 +222,8 @@ class VideoViewSet(viewsets.ViewSet):
             return Response({"error":str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(detail=False, method='Get')   
-    def all_videos(self, pk=None):
+    @action(detail=True, method=['get'])   
+    def all_videos(self, request, pk=None):
 
         try:
             with connection.cursor() as cursor:
@@ -235,20 +235,26 @@ class VideoViewSet(viewsets.ViewSet):
                 user = cursor.fetchone()
 
                 if not user:
-                    return Response({"error":f"user {user} not found"},
+                    return Response({"error":"user not found"},
                                     status=status.HTTP_404_NOT_FOUND)
 
             with connection.cursor() as cursor:
                 all_videos_query = """SELECT *
                              FROM apis_video
-                             WHERE id = %s"""
+                             WHERE user_id = %s"""
                 
                 cursor.execute(all_videos_query,[pk])
-                videos = cursor.fetchone()
+                videos = cursor.fetchall()
 
                 if not videos:
-                    return Response({"error":f"{videos} not found"},
+                    return Response({"error":"videos not found"},
                                     status=status.HTTP_404_NOT_FOUND)
+            
+            return Response({"user":user,
+                             "videos":videos},
+                             status = status.HTTP_200_OK
+                             )
+        
         
         except Exception as e:
             return Response({'error':str(e)},
@@ -299,14 +305,7 @@ class SettingsViewSet(viewsets.ViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# class NotificationViewSet(viewsets.ViewSet):
-#     @action(detail=True, method='get')
-#     def notification(self,request, pk=None):
 
-#         try:
-#             with connection as cursor:
-#                 if first name as None:
-        
 
 
 
