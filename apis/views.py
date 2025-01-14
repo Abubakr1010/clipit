@@ -305,10 +305,9 @@ class SettingsViewSet(viewsets.ViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
-
-
-
+class FiltersViewSet(viewsets.viewset):
+    def filter():
+        working = a
 
 
         
