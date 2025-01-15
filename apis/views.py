@@ -306,8 +306,8 @@ class SettingsViewSet(viewsets.ViewSet):
 
 
 class FiltersViewSet(viewsets.viewset):
-    def filter():
-        working = a
+    def filter(self,request,method=['Get']):
+        
 
 
         
