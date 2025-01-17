@@ -307,6 +307,10 @@ class SettingsViewSet(viewsets.ViewSet):
 
 class FiltersViewSet(viewsets.viewset):
     def filter(self,request,method=['Get']):
+
+        try:
+            user = 
+
         
 
 
