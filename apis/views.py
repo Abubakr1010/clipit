@@ -309,7 +309,7 @@ class FiltersViewSet(viewsets.viewset):
     def filter(self,request,method=['Get']):
 
         try:
-            with connection
+            with connection.cursor()
 
         
 
