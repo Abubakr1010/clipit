@@ -310,7 +310,7 @@ class FiltersViewSet(viewsets.viewset):
 
         try:
             with connection.cursor() as cursor:
-                if first_name = user
+                if first_name = user.name
 
         
 
