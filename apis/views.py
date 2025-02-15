@@ -349,7 +349,50 @@ class FiltersViewSet(viewsets.ViewSet):
             with connection.cursor() as cursor:
                 user_query = """SELECT first_name, id
                              FROM apis_user
-                             WHERE id = %s """
+                             WHERE id = %s"""
+                
+                cursor.execute(user_query,[pk])
+                user = cursor.fetchone()
+                
+                if not user:
+                    return Response({"error":"user not found"},
+                                 status = status.HTTP_200_OK)
+                
+            with connection.cursor() as cursor:
+                oldest_video_query = """ SELECT * 
+                                    FROM apis_video
+                                    WHERE user_id = %s
+                                    ORDER BY id ASC
+                                    LIMIT 1"""
+                
+                cursor.execute(oldest_video_query,[pk])
+                video = cursor.fetchall()
+
+                if not video:
+                    return Response({"error":"video not found"},
+                                    status = status.HTTP_404_NOT_FOUND)
+            
+            return Response({"video":video},
+                            status = status.HTTP_200_OK)
+        
+        
+        except Exception as e:
+            return Response({'error':str(e)},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+                
+            
+            
+            
+
+            
+
+
+                
+
+            
+
                 
     
     
