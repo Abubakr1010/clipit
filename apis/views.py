@@ -305,76 +305,55 @@ class SettingsViewSet(viewsets.ViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class FiltersViewSet(viewsets.viewset):
-    def filter(self,request,method=['Get']):
-
+class FiltersViewSet(viewsets.ViewSet):
+    @action(detail=False, method='Get')
+    def recent_videos(self,request,pk=None):
         try:
             with connection.cursor() as cursor:
-                if first_name = user.name
+                user_query = """SELECT first_name,id
+                            FROM apis_user
+                            WHERE id = %s"""
 
-            except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                cursor.execute(user_query,[pk])
+                user = cursor.fetchone()
 
+                if not user:
+                    return Response({"error":"user not found"},
+                                    status = status.HTTP_404_NOT_FOUND)
+            
+            with connection.cursor() as cursor:
+                recent_video_query = """SELECT * 
 
-                            return Response({"status":"updated successfully"}, status=status.HTTP_200_OK)
-                        
-            except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-                            return Response({"status":"updated successfully"}, status=status.HTTP_200_OK)
-
-
-               except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-                            return Response({"status":"updated successfully"}, status=status.HTTP_200_OK)
-        
-
-               except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-                            return Response({"status":"updated successfully"}, status=status.HTTP_200_OK)
-
+                                     FROM apis_video
+                                     WHERE user_id = %s
+                                     ORDER BY id DESC 
+                                     LIMIT 10"""
                 
-               except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                cursor.execute(recent_video_query,[pk])
+                video = cursor.fetchall()
+
+                if not video:
+                    return Response({"error":"no video found"},
+                                    status = status.HTTP_404_NOT_FOUND)
+
+            return Response({"videos":video},
+                            status = status.HTTP_200_OK)
         
         except Exception as e:
             return Response({'error':str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-        except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-                            except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-                         except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-                    except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                except Exception as e:
-            return Response({'error':str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+     
 
 
 
+                                     
 
-        
+                                    
+                    
+            
+
+
 
 
         
