@@ -323,7 +323,6 @@ class FiltersViewSet(viewsets.ViewSet):
             
             with connection.cursor() as cursor:
                 recent_video_query = """SELECT * 
-
                                      FROM apis_video
                                      WHERE user_id = %s
                                      ORDER BY id DESC 
@@ -344,6 +343,16 @@ class FiltersViewSet(viewsets.ViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
      
+    @action(detail=False, method='Get')
+    def oldest_video(self,request,pk=None):
+        try:
+            with connection.cursor() as cursor:
+                user_query = """SELECT first_name, id
+                             FROM apis_user
+                             WHERE id = %s """
+                
+    
+    
 
 
 
