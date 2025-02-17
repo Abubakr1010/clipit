@@ -380,8 +380,22 @@ class FiltersViewSet(viewsets.ViewSet):
             return Response({'error':str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+    @action(detail=False, methods='Get')
+    def video_with_most_likes(self,request,pk=None):
+        try:
+            with connection.cursor() as cursor:
+                user_query = """SELECT first_name, id
+                            FROM apis_user
+                            WHERE id=%s"""
+                
+                cursor.execute(user_query,[pk])
+                user = cursor.fetchone()
 
-    def most_viewed():
+                if not user:
+                    return Response({"error":"user not found"})
+                    
+
+
         
 
                 
