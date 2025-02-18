@@ -381,7 +381,7 @@ class FiltersViewSet(viewsets.ViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     @action(detail=False, methods='Get')
-    def video_with_most_likes(self,request,pk=None):
+    def video_with_most_views(self,request,pk=None):
         try:
             with connection.cursor() as cursor:
                 user_query = """SELECT first_name, id
@@ -414,6 +414,57 @@ class FiltersViewSet(viewsets.ViewSet):
         except Exception as e:
             return Response({'error':str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    
+    @action(detail=False, method='Get')
+    def least_video_viewed(self,request,pk=None):
+        try:
+            with connection.cursor() as cursor:
+                user_query = """SELECT first_name,id
+                                FROM apis_user
+                                WHERE id = %s"""
+                
+                cursor.execute(user_query,[pk])
+                user = cursor.fetchone()
+
+                if not user:
+                    return Response({"status":"user not found"},
+                                    status=status.HTTP_404_NOT_FOUND)
+                
+            with connection.cursor() as cursor:
+                video_query = """SELECT * 
+                            FROM apis_video
+                            WHERE user_id = %s
+                            ORDER BY views ASC
+                            LIMIT 1"""
+                
+                cursor.execute(video_query,[pk])
+                video = cursor.fetchone()
+
+                if not video:
+                    return Response({"status":"video not found"},
+                                    status = status.HTTP_404_NOT_FOUND)
+                
+            return Response({"video":video},
+                            status = status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({'error':str(e)},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+            
+                
+
+                
+
+            
+            
+
+        
+
+
+
         
 
 
