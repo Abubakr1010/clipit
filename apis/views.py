@@ -393,6 +393,31 @@ class FiltersViewSet(viewsets.ViewSet):
 
                 if not user:
                     return Response({"error":"user not found"})
+            
+            with connection.cursor() as cursor:
+                video_query = """SELECT *
+                              FROM apis_video
+                              WHERE user_id = %s
+                              ORDER BY views DESC
+                              LIMIT 1"""
+                
+                cursor.execute(video_query,[pk])
+                video = cursor.fetchone()
+
+                if not video:
+                    return Response({"error":"video not found"},
+                                    status = status.HTTP_404_NOT_FOUND)
+            
+            return Response({"video":video},
+                            status = status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({'error':str(e)},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+
                     
 
 
